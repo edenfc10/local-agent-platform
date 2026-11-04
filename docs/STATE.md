@@ -82,7 +82,9 @@ No unrelated change may stop or recreate this profile.
 - `scripts/verify_backup_manifest.sh` validates SHA-256 manifests without
   restoring or modifying backup data.
 - The AIJAA logical dump remains the only restore-verified workload.
-- An encrypted off-device destination has not been selected.
+- An encrypted external SSD is the selected primary off-device destination
+  (REPORTED); its mount path, capacity, filesystem and encryption remain NOT
+  TESTED.
 - No live backup, copy, restore or retention operation is authorized by this
   documentation change.
 
