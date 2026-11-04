@@ -37,8 +37,10 @@ off-device protection.
 
 ## Safe verification tools
 
-- `scripts/backup_preflight.sh` checks a proposed backup destination and known
-  source paths without copying data or changing services.
+- `scripts/backup_preflight.sh` checks a proposed filesystem destination and
+  known source paths without copying data or changing services.
+- `scripts/icloud_backup_preflight.sh` checks local iCloud Drive readiness and
+  the verified AIJAA source backup without uploading data.
 - `scripts/verify_backup_manifest.sh` verifies SHA-256 manifests without
   restoring or modifying backup data.
 
