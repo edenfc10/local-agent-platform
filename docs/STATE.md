@@ -73,6 +73,19 @@ No unrelated change may stop or recreate this profile.
 - No migration was applied to the protected database
 - No off-device copy has been verified
 
+## Backup and recovery foundation
+
+- `docs/BACKUP_RECOVERY.md` defines protected workloads, backup tiers,
+  provisional RPO/RTO targets, encryption, retention and restore proof.
+- `scripts/backup_preflight.sh` performs read-only destination and source
+  checks; it does not copy data or change services.
+- `scripts/verify_backup_manifest.sh` validates SHA-256 manifests without
+  restoring or modifying backup data.
+- The AIJAA logical dump remains the only restore-verified workload.
+- An encrypted off-device destination has not been selected.
+- No live backup, copy, restore or retention operation is authorized by this
+  documentation change.
+
 ## GitHub Actions
 
 ### RebbeStay
