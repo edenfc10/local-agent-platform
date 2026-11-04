@@ -83,8 +83,9 @@ No unrelated change may stop or recreate this profile.
   restoring or modifying backup data.
 - The AIJAA logical dump remains the only restore-verified workload.
 - No external SSD is currently available (REPORTED).
-- Off-device protection remains unresolved; a client-side encrypted copy in an
-  existing cloud account is the preferred temporary option if selected.
+- iCloud Drive and OneDrive Personal directories are present (VERIFIED).
+- iCloud Drive is the selected interim encrypted-copy destination; quota,
+  synchronization and cloud recovery remain NOT TESTED.
 - No live backup, copy, restore or retention operation is authorized by this
   documentation change.
 
