@@ -27,9 +27,9 @@ Completed in the foundation PR:
 
 Next execution steps:
 
-1. Connect the selected external SSD and identify its mount path.
-2. Run the read-only preflight to verify encrypted APFS, capacity and that it
-   is on a different filesystem from the internal SSD.
+1. Select an available off-device target: client-side encrypted cloud storage
+   now, or an encrypted external SSD later.
+2. Run a provider-safe preflight without reading or storing credentials.
 3. Copy the verified AIJAA dump off-device under an approved execution plan.
 4. Verify the destination checksum.
 5. Inventory every remaining stateful database and named Docker volume.
