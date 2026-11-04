@@ -21,26 +21,30 @@ The ordered roadmap and exit criteria are maintained in
 
 ## P2 — Consolidate Colima safely
 
-1. Complete the read-only size and metadata report for:
-   - `aijaa-ci`
-   - `rebbestay-ci`
-   - `rebbestay-actions`
-2. Classify the anonymous `aijaa-ci` volume.
-3. Classify AIJAA and Supabase-named volumes in `rebbestay-ci`.
-4. Assign one owner and one allowed role to every profile.
-5. Prepare a stop-only plan for profiles proven idle.
-6. Observe before proposing any deletion.
-7. Select one isolated testing/staging profile.
+1. Treat the profile size and metadata report as completed.
+2. Classify the two anonymous `aijaa-ci` volumes left by CI.
+3. Refresh the logical database and Redis state in `rebbestay-ci`.
+4. Classify the Supabase-named volume in `rebbestay-ci`.
+5. Record explicit ownership:
+   - `default`: protected stateful development
+   - `rebbestay-actions`: RebbeStay CI
+   - `aijaa-ci`: AIJAA CI
+   - `rebbestay-ci`: current AIJAA local runtime
+6. Add stop-only, on-demand lifecycle plans for both CI profiles.
+7. Observe before proposing any deletion or profile rename.
 
 ## P3 — Harden GitHub Actions
 
-1. Verify the runner's effective Docker socket at startup.
-2. Inventory runner filesystem read/write access.
-3. Restrict network access where practical.
-4. Add job preflight and post-job cleanup verification.
-5. Keep the external-fork guard.
-6. Evaluate a dedicated macOS user or stronger executor boundary.
-7. Start CI capacity on demand where reliable.
+1. Verify the effective Docker socket for both runners at startup.
+2. Inventory filesystem read/write access for both runner work directories.
+3. Preserve the AIJAA runner's no-home-mount boundary.
+4. Restrict network access where practical.
+5. Add job preflight and post-job cleanup verification.
+6. Add safe handling for orphaned anonymous CI volumes.
+7. Keep external-fork guards.
+8. Evaluate dedicated macOS users or stronger executor boundaries.
+9. Start both CI profiles on demand where reliable.
+10. Upgrade `actions/setup-node` v4 to v6 in a separate maintenance PR.
 
 ## P4 — Harden networking
 
