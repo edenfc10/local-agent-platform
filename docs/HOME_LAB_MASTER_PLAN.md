@@ -418,6 +418,12 @@ intentional Tailscale access where remote access is required.
 Backup files may contain sensitive data. Off-device copies must be encrypted
 and must never be committed to Git.
 
+The implementation baseline is maintained in `docs/BACKUP_RECOVERY.md`.
+Read-only destination and checksum checks are provided by
+`scripts/backup_preflight.sh` and
+`scripts/verify_backup_manifest.sh`. These tools do not authorize or perform
+a live backup, restore, retention cleanup or service mutation.
+
 ## 11. Risk register
 
 | Priority | Risk | Current control | Required response |
@@ -523,15 +529,22 @@ No lifecycle command may delete named volumes.
 
 ### Phase 0 — Documentation baseline
 
-- Merge this master plan through a PR.
-- Make this document mandatory reading.
-- Keep `STATE.md` and `NEXT.md` current.
-- Store raw local audit reports outside Git; commit only redacted conclusions.
+Status: complete through PR #1.
+
+- Master plan merged and set as mandatory reading.
+- `STATE.md` and `NEXT.md` are maintained with architecture work.
+- Raw local audit reports remain outside Git; only redacted conclusions are
+  committed.
 
 ### Phase 1 — Protect data
 
+Status: foundation proposed; live backup operations remain pending.
+
+- Backup tiers, retention, encryption and restore-proof requirements are
+  defined in `docs/BACKUP_RECOVERY.md`.
+- Read-only preflight and checksum verification tools are available.
 - Configure an encrypted off-device backup destination.
-- Copy and verify the AIJAA dump off-device.
+- Copy and verify the AIJAA dump off-device under an approved execution plan.
 - Add backup manifests for all stateful workloads.
 - Write restore runbooks.
 - Perform at least one isolated restore test per stateful service.
