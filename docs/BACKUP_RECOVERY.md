@@ -101,11 +101,12 @@ the internal SSD. Acceptable destinations include:
 - an encrypted Time Machine destination with successful backup evidence;
 - client-side encrypted cloud storage.
 
-No external SSD is currently available (**REPORTED**, 2026-11-05). The only
-known backup location is the Mac's internal SSD, so off-device protection
-remains unresolved. A client-side encrypted copy in an existing cloud account
-is the preferred temporary option if acceptable; purchasing storage is not
-authorized by this document.
+No external SSD is currently available (**REPORTED**, 2026-11-05). iCloud
+Drive and OneDrive Personal directories were detected on the Mac
+(**VERIFIED**, 2026-11-05). iCloud Drive is the selected interim destination
+for a client-side encrypted copy; OneDrive remains an alternative. Remote
+quota, successful synchronization and recovery from iCloud remain **NOT
+TESTED**. Purchasing storage is not authorized by this document.
 
 ### Tier 3 — Independent second copy
 
@@ -227,13 +228,14 @@ runner credentials and backup contents.
 
 Before copying a backup off-device:
 
-1. select an available off-device destination: client-side encrypted cloud
-   storage now, or an encrypted external SSD later;
-2. verify destination capacity and access without exposing credentials;
-3. decide how the encryption or recovery key is retained away from the backup;
-4. decide whether a second independent copy is required later;
-5. confirm acceptable RPO for each active project;
-6. identify who authorizes and records retention cleanup.
+1. run the read-only iCloud preflight;
+2. choose an encryption password and retain it outside the backup;
+3. create a client-side encrypted image under a reviewed execution plan;
+4. verify iCloud synchronization and destination checksum;
+5. test download and isolated recovery from the cloud copy;
+6. decide whether a second independent copy is required later;
+7. confirm acceptable RPO for each active project;
+8. identify who authorizes and records retention cleanup.
 
 ## 14. Exit criteria for P1
 
