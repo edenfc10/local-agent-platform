@@ -55,26 +55,31 @@ MacBook Pro M1 Max
 |   +-- FitForYou databases
 |   +-- protected AIJAA PostgreSQL and Redis
 |
-+-- Colima: rebbestay-actions [CI]
-|   +-- GitHub Actions Docker workloads
++-- Colima: rebbestay-actions [RebbeStay CI]
+|   +-- runner: eden-mac-rebbestay
+|   +-- ephemeral Supabase test workloads
 |
-+-- Colima: aijaa-ci [unclassified]
-|   +-- no containers
-|   +-- one anonymous volume
++-- Colima: aijaa-ci [AIJAA CI]
+|   +-- runner: eden-aijaa-ci
+|   +-- ephemeral PostgreSQL test workloads
+|   +-- no macOS home mount
 |
-+-- Colima: rebbestay-ci [quarantined]
-    +-- empty AIJAA PostgreSQL and Redis runtime
-    +-- unclassified named volumes
++-- Colima: rebbestay-ci [AIJAA local runtime; name under review]
+    +-- AIJAA PostgreSQL and Redis
+    +-- unclassified Supabase-named volume
 ```
 
 ## Target profile roles
 
-1. `default`: protected stateful development.
-2. `rebbestay-actions`: ephemeral CI only.
-3. One selected profile: isolated testing and staging, active on demand.
+1. `default`: protected shared stateful development.
+2. `rebbestay-actions`: RebbeStay CI, active on demand.
+3. `aijaa-ci`: AIJAA CI, active on demand.
+4. `rebbestay-ci`: current AIJAA local database runtime, pending a later
+   reviewed rename or consolidation.
 
-The unselected duplicate profiles are stopped only after volume
-classification, backup and review. Deletion is a separate later decision.
+Project-specific CI profiles remain separated. Resource savings come from
+safe on-demand lifecycle control. No profile or volume is deleted as part of
+a lifecycle transition.
 
 ## External boundaries
 
