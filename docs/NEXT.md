@@ -7,17 +7,35 @@ The ordered roadmap and exit criteria are maintained in
 
 ## P0 — Establish the operating baseline
 
-1. Review and merge the Home Lab Master Plan PR.
-2. Require future infrastructure changes to use feature branches and PRs.
-3. Keep `HOME_LAB_MASTER_PLAN.md`, `STATE.md` and `NEXT.md` synchronized.
+Status: complete.
+
+1. Home Lab Master Plan merged through PR #1.
+2. Future infrastructure changes use feature branches and pull requests.
+3. `HOME_LAB_MASTER_PLAN.md`, `STATE.md` and `NEXT.md` remain synchronized.
 
 ## P1 — Protect state
 
+Status: foundation proposed; live backup actions are not authorized.
+
+Completed in the foundation PR:
+
+1. Define protected workloads and provisional recovery objectives.
+2. Define backup tiers, retention, encryption and restore-proof requirements.
+3. Add a read-only backup destination preflight.
+4. Add a non-mutating SHA-256 manifest verifier.
+5. Record the verified AIJAA local backup and isolated restore evidence.
+
+Next execution steps:
+
 1. Select an encrypted off-device backup destination.
-2. Copy the verified AIJAA dump off-device and verify its checksum.
-3. Inventory every stateful database and named Docker volume.
-4. Create backup manifests and retention rules.
-5. Write and test restore runbooks for each protected workload.
+2. Run the read-only preflight against that destination.
+3. Copy the verified AIJAA dump off-device under an approved execution plan.
+4. Verify the destination checksum.
+5. Inventory every remaining stateful database and named Docker volume.
+6. Write and test restore runbooks for local-agent memory, RebbeStay,
+   FitForYou and Open WebUI.
+7. Confirm RPO and RTO targets from real change frequency and restore duration.
+8. Add reviewed retention cleanup only after two usable copies exist.
 
 ## P2 — Consolidate Colima safely
 
