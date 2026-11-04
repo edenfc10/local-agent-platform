@@ -101,8 +101,10 @@ the internal SSD. Acceptable destinations include:
 - an encrypted Time Machine destination with successful backup evidence;
 - client-side encrypted cloud storage.
 
-The exact destination has not been selected. No paid service is authorized by
-this document.
+The selected primary destination is an encrypted external SSD (**REPORTED**,
+2026-11-05). Its mount path, capacity, filesystem and encryption state remain
+**NOT TESTED** until a read-only preflight runs on the connected Mac. No paid
+service is authorized by this document.
 
 ### Tier 3 — Independent second copy
 
@@ -222,14 +224,15 @@ runner credentials and backup contents.
 
 ## 13. Decisions still required
 
-Before copying a backup off-device, decide:
+Before copying a backup off-device:
 
-1. which encrypted destination is available;
-2. whether it is always attached or connected only for backups;
-3. how the encryption key or recovery key is retained;
-4. whether a second independent copy is required now;
-5. acceptable RPO for each active project;
-6. who authorizes and records retention cleanup.
+1. connect the selected external SSD and verify its mount path;
+2. verify that it uses encrypted APFS and has sufficient free space;
+3. decide whether it is always attached or connected only for backups;
+4. decide how the recovery key is retained away from the drive;
+5. decide whether a second independent copy is required now;
+6. confirm acceptable RPO for each active project;
+7. identify who authorizes and records retention cleanup.
 
 ## 14. Exit criteria for P1
 
