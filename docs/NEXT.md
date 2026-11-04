@@ -27,11 +27,11 @@ Completed in the foundation PR:
 
 Next execution steps:
 
-1. Select an available off-device target: client-side encrypted cloud storage
-   now, or an encrypted external SSD later.
-2. Run a provider-safe preflight without reading or storing credentials.
-3. Copy the verified AIJAA dump off-device under an approved execution plan.
-4. Verify the destination checksum.
+1. Run the read-only iCloud Drive preflight.
+2. Define secure password/recovery-key handling outside the backup.
+3. Create a client-side encrypted copy of the verified AIJAA backup under an
+   approved execution plan.
+4. Verify iCloud synchronization, download and destination checksum.
 5. Inventory every remaining stateful database and named Docker volume.
 6. Write and test restore runbooks for local-agent memory, RebbeStay,
    FitForYou and Open WebUI.
