@@ -543,8 +543,8 @@ Status: foundation proposed; live backup operations remain pending.
 - Backup tiers, retention, encryption and restore-proof requirements are
   defined in `docs/BACKUP_RECOVERY.md`.
 - Read-only preflight and checksum verification tools are available.
-- Verify the selected encrypted external SSD, including mount path, capacity,
-  filesystem and encryption state.
+- Select an off-device destination; no external SSD is currently available.
+- Prefer a client-side encrypted cloud copy as an interim option if approved.
 - Copy and verify the AIJAA dump off-device under an approved execution plan.
 - Add backup manifests for all stateful workloads.
 - Write restore runbooks.
