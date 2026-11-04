@@ -23,12 +23,24 @@ Read these files before changing the system:
 
 1. `AGENTS.md`
 2. `docs/HOME_LAB_MASTER_PLAN.md`
-3. `docs/ARCHITECTURE.md`
-4. `docs/STATE.md`
-5. `docs/NEXT.md`
+3. `docs/BACKUP_RECOVERY.md`
+4. `docs/ARCHITECTURE.md`
+5. `docs/STATE.md`
+6. `docs/NEXT.md`
 
 `docs/HOME_LAB_MASTER_PLAN.md` contains the verified discovery, decisions,
 risk register, target architecture and delivery roadmap.
+
+`docs/BACKUP_RECOVERY.md` defines protected workloads, backup tiers,
+retention, restore evidence and the remaining decisions for encrypted
+off-device protection.
+
+## Safe verification tools
+
+- `scripts/backup_preflight.sh` checks a proposed backup destination and known
+  source paths without copying data or changing services.
+- `scripts/verify_backup_manifest.sh` verifies SHA-256 manifests without
+  restoring or modifying backup data.
 
 ## Change workflow
 
