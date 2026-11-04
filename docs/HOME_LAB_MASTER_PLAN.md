@@ -543,8 +543,11 @@ Status: foundation proposed; live backup operations remain pending.
 - Backup tiers, retention, encryption and restore-proof requirements are
   defined in `docs/BACKUP_RECOVERY.md`.
 - Read-only preflight and checksum verification tools are available.
-- Select an off-device destination; no external SSD is currently available.
-- Prefer a client-side encrypted cloud copy as an interim option if approved.
+- No external SSD is currently available.
+- Use iCloud Drive as the selected interim destination for a client-side
+  encrypted copy; OneDrive Personal remains an alternative.
+- Verify quota, synchronization, download and recovery before treating the
+  cloud copy as off-device protection.
 - Copy and verify the AIJAA dump off-device under an approved execution plan.
 - Add backup manifests for all stateful workloads.
 - Write restore runbooks.
