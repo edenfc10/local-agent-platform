@@ -60,7 +60,8 @@ No unrelated change may stop or recreate this profile.
 - Active code worktree:
   `~/Code/AIJAA/aijaa-reconcile`
 - Latest observed branch: `feat/wp1-submit-safety`
-- Latest observed commit:
+- Latest reported HEAD: `6aca9ec` — `ci: install Node.js on local runner`
+- Earlier verified commit:
   `3127e713f6873fcf3b9ff33861a5d272880cfc4b`
 - Protected database revision: `6c1a9d4e2f70`
 - Source migration head: `9a3c7e1f5b20`
@@ -74,19 +75,38 @@ No unrelated change may stop or recreate this profile.
 
 ## GitHub Actions
 
-- Local runner: `eden-mac-rebbestay`
+### RebbeStay
+
+- Runner: `eden-mac-rebbestay`
 - Labels: `self-hosted`, `macOS`, `ARM64`, `rebbestay-ci`
-- Docker workload intended for `rebbestay-actions`
-- RebbeStay App Quality and Database jobs historically passed
-- Runner host isolation remains partial because the listener uses the normal
-  macOS account
+- Docker runtime: `rebbestay-actions`
+- App Quality and Database jobs historically passed
+- Latest Docker evidence: zero containers, zero volumes and 12 cached Supabase
+  images after job cleanup
+
+### AIJAA
+
+- Runner: `eden-aijaa-ci`
+- Labels: `self-hosted`, `Linux`, `ARM64`, `aijaa-ci`
+- Docker runtime: `aijaa-ci`
+- No macOS home-directory mount was reported
+- CI result: 831 passed, 41 skipped
+- Ruff, JavaScript syntax, lock check, diff check, Alembic, offline SQL and
+  downgrade/upgrade checks passed
+- Push and PR runs passed
+- Latest Docker evidence: zero containers and two unlinked anonymous volumes
+  of approximately 50 MB each
+
+Both runner listeners require host-permission and network review.
 
 ## Open risks
 
 - No verified off-device backup
 - Four running Colima profiles with overlapping names and responsibilities
-- Anonymous volume in `aijaa-ci` not yet classified
+- Two anonymous AIJAA CI volumes require ownership and cleanup classification
 - Three volumes in `rebbestay-ci` require final classification
+- `rebbestay-ci` is reported as the current AIJAA local server; its logical
+  state must be refreshed before consolidation
 - GitHub runner needs host-permission and network hardening
 - RebbeStay Supabase development ports listen on all interfaces
 - Local-agent scripts are not yet packaged as one tested service
