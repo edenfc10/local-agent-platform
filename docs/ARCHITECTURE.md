@@ -64,9 +64,10 @@ MacBook Pro M1 Max
 |   +-- ephemeral PostgreSQL test workloads
 |   +-- no macOS home mount
 |
-+-- Colima: rebbestay-ci [AIJAA local runtime; name under review]
-    +-- AIJAA PostgreSQL and Redis
++-- Colima: rebbestay-ci [empty duplicate; retirement candidate]
+    +-- empty isolated AIJAA PostgreSQL and Redis
     +-- unclassified Supabase-named volume
+    +-- no macOS localhost forwarding
 ```
 
 ## Target profile roles
@@ -74,8 +75,9 @@ MacBook Pro M1 Max
 1. `default`: protected shared stateful development.
 2. `rebbestay-actions`: RebbeStay CI, active on demand.
 3. `aijaa-ci`: AIJAA CI, active on demand.
-4. `rebbestay-ci`: current AIJAA local database runtime, pending a later
-   reviewed rename or consolidation.
+4. `rebbestay-ci`: empty isolated duplicate and retirement candidate. It may
+   be stopped only under a reviewed stop-only plan; deletion remains
+   prohibited until off-device recovery and observation gates pass.
 
 Project-specific CI profiles remain separated. Resource savings come from
 safe on-demand lifecycle control. No profile or volume is deleted as part of

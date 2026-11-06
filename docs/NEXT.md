@@ -1,37 +1,67 @@
 # Next Work
 
-Updated: 2026-11-05
+Updated: 2026-11-06
 
 The ordered roadmap and exit criteria are maintained in
 `docs/HOME_LAB_MASTER_PLAN.md`.
 
 ## P0 — Establish the operating baseline
 
-1. Review and merge the Home Lab Master Plan PR.
-2. Require future infrastructure changes to use feature branches and PRs.
-3. Keep `HOME_LAB_MASTER_PLAN.md`, `STATE.md` and `NEXT.md` synchronized.
+Status: complete.
+
+1. Home Lab Master Plan merged through PR #1.
+2. Future infrastructure changes use feature branches and pull requests.
+3. `HOME_LAB_MASTER_PLAN.md`, `STATE.md` and `NEXT.md` remain synchronized.
 
 ## P1 — Protect state
 
-1. Select an encrypted off-device backup destination.
-2. Copy the verified AIJAA dump off-device and verify its checksum.
-3. Inventory every stateful database and named Docker volume.
-4. Create backup manifests and retention rules.
-5. Write and test restore runbooks for each protected workload.
+Status: foundation proposed; live backup actions are not authorized.
+
+Completed in the foundation PR:
+
+1. Define protected workloads and provisional recovery objectives.
+2. Define backup tiers, retention, encryption and restore-proof requirements.
+3. Add a read-only backup destination preflight.
+4. Add a non-mutating SHA-256 manifest verifier.
+5. Record the verified AIJAA local backup and isolated restore evidence.
+
+Next execution steps:
+
+1. Run the read-only iCloud Drive preflight.
+2. Define secure password/recovery-key handling outside the backup.
+3. Create a client-side encrypted copy of the verified AIJAA backup under an
+   approved execution plan.
+4. Verify iCloud synchronization, download and destination checksum.
+5. Inventory every remaining stateful database and named Docker volume.
+6. Write and test restore runbooks for local-agent memory, RebbeStay,
+   FitForYou and Open WebUI.
+7. Confirm RPO and RTO targets from real change frequency and restore duration.
+8. Add reviewed retention cleanup only after two usable copies exist.
 
 ## P2 — Consolidate Colima safely
 
-1. Treat the profile size and metadata report as completed.
-2. Classify the two anonymous `aijaa-ci` volumes left by CI.
-3. Refresh the logical database and Redis state in `rebbestay-ci`.
-4. Classify the Supabase-named volume in `rebbestay-ci`.
-5. Record explicit ownership:
-   - `default`: protected stateful development
-   - `rebbestay-actions`: RebbeStay CI
-   - `aijaa-ci`: AIJAA CI
-   - `rebbestay-ci`: current AIJAA local runtime
-6. Add stop-only, on-demand lifecycle plans for both CI profiles.
-7. Observe before proposing any deletion or profile rename.
+Completed evidence:
+
+1. Measured physical and logical storage for all four profiles.
+2. Verified that macOS AIJAA localhost forwarding belongs to `default`.
+3. Compared both AIJAA PostgreSQL clusters and Redis instances.
+4. Classified `rebbestay-ci` as an empty isolated duplicate candidate.
+5. Verified the RebbeStay listener on macOS and the AIJAA listener inside its
+   VM.
+
+Next execution steps:
+
+1. Prepare a persistent stop-only plan for `rebbestay-ci`.
+2. Preserve every container, image and volume.
+3. Stop only the `rebbestay-ci` VM after explicit approval.
+4. Verify AIJAA PostgreSQL and Redis on localhost remain healthy.
+5. Observe for regressions before considering retirement.
+6. Classify the Supabase-named volume in `rebbestay-ci`.
+7. Classify the five anonymous `aijaa-ci` volumes (251.5 MB total).
+8. Add stop-only, on-demand lifecycle plans for both CI profiles.
+9. Do not delete any profile or volume until encrypted off-device recovery is
+   proven.
+
 
 ## P3 — Harden GitHub Actions
 
