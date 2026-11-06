@@ -1,8 +1,8 @@
 # Home Lab Master Plan
 
 Status: active working baseline  
-Last updated: 2026-11-05 (Asia/Jerusalem)  
-Evidence window: 2026-11-04 to 2026-11-05  
+Last updated: 2026-11-06 (Asia/Jerusalem)  
+Evidence window: 2026-11-04 to 2026-11-06  
 Operating strategy: **KEEP + IMPROVE + CONSOLIDATE**
 
 This document is the canonical engineering plan for the Mac home lab and local
@@ -79,7 +79,8 @@ The discovery snapshot showed:
 - CPU approximately 83% idle.
 - Memory headroom approximately 80–86%.
 - Swap use approximately 10.77 GB after roughly 28 days of uptime.
-- Approximately 676 GiB free and 217 GiB used on the main data volume.
+- The original discovery showed approximately 676 GiB free and 217 GiB used.
+- A 2026-11-06 follow-up measured 650 GiB free and 227 GiB used (26%).
 
 The swap figure is historical accumulation and does not alone prove current
 memory pressure. Future decisions must use live memory pressure and sustained
@@ -87,25 +88,32 @@ CPU measurements.
 
 ### Large local storage areas
 
-- Ollama data: approximately 56 GB.
-- Colima data: historically approximately 53 GB across the profiles measured
-  before the later `aijaa-ci` discovery.
-- Installed Ollama model sizes are logically larger because tags can share
-  blobs.
-- No model was loaded during the resource audit.
+The 2026-11-06 follow-up measured:
 
-These values are snapshots, not quotas or cleanup authorization.
+- Ollama data: approximately 56 GB.
+- Colima allocated storage: approximately 59 GB.
+- `default`: approximately 28.6 GB allocated.
+- `aijaa-ci`: approximately 6.6 GB allocated.
+- `rebbestay-actions`: approximately 8.2 GB allocated.
+- `rebbestay-ci`: approximately 16.1 GB allocated.
+- GitHub Actions runner installations: approximately 2.9 GB.
+- Project source under `~/Code`: approximately 1.4 GB.
+
+The four Colima profiles expose approximately 380 GB of logical sparse-disk
+capacity, but only approximately 59 GB was physically allocated. Logical
+capacity is not physical use. Installed Ollama model sizes can also share
+blobs. These values are snapshots, not quotas or cleanup authorization.
 
 ## 5. Current Colima topology
 
-Four profiles were observed running on 2026-11-05:
+Four profiles were observed running on 2026-11-06:
 
 | Profile | CPU | Memory | Logical disk | Verified workload |
 | --- | ---: | ---: | ---: | --- |
 | `default` | 8 | 16 GiB | 120 GiB | RebbeStay, Open WebUI, FitForYou, Supabase, active AIJAA data and other development containers |
 | `aijaa-ci` | 4 | 8 GiB | 60 GiB | Dedicated isolated AIJAA GitHub Actions runtime; no containers after the verified CI runs |
 | `rebbestay-actions` | 4 | 10 GiB | 60 GiB | Dedicated RebbeStay GitHub Actions Docker runtime |
-| `rebbestay-ci` | 4 | 10 GiB | 60 GiB | AIJAA local PostgreSQL and Redis runtime plus an old Supabase-named volume |
+| `rebbestay-ci` | 4 | 10 GiB | 60 GiB | Empty isolated AIJAA duplicate plus an unclassified Supabase-named volume; retirement candidate |
 
 The configured total is 20 virtual CPUs and 44 GiB of VM memory. This is not
 the same as continuously consumed physical memory, but four simultaneously
@@ -134,9 +142,11 @@ until each workload has an owner, backup status and rollback procedure.
 - No mount to the macOS home directory was reported.
 - No containers remained after the verified CI runs.
 - One PostgreSQL 16 image remained locally.
-- Two anonymous volumes remained, approximately 50.45 MB and 50.21 MB.
+- Five anonymous volumes remained after the latest green jobs, approximately
+  251.5 MB in total.
 - The volumes are consistent with temporary CI database use but remain
   unclassified; do not delete them until job ownership is confirmed.
+- `Runner.Listener` was verified active inside the VM.
 - This profile is an active CI asset, not an idle profile selected for
   retirement.
 - It should run on demand and stop when no AIJAA job is queued, once reliable
@@ -161,7 +171,7 @@ macOS user, so Docker separation is only partial host isolation.
 
 Observed containers:
 
-- `aijaa-postgres-1`, PostgreSQL 16;
+- `aijaa-postgres-1`, PostgreSQL 16.15;
 - `aijaa-redis-1`, Redis 7.
 
 Observed volumes:
@@ -170,21 +180,22 @@ Observed volumes:
 - `aijaa_redis_data`;
 - `supabase_db_rebbestay-true-clean.JwY3Oi`.
 
-The latest storage evidence showed:
+The 2026-11-06 source-of-truth check established:
 
-- AIJAA PostgreSQL volume: approximately 64.9 MB;
-- AIJAA Redis volume: 177 bytes;
-- Supabase-named volume: approximately 51.79 MB;
-- 25 cached images;
-- no build cache.
+- the macOS localhost forwards for PostgreSQL `55432` and Redis `6379`
+  are owned by the `default` profile;
+- this profile's PostgreSQL cluster has a distinct system identifier;
+- its database is approximately 7.5 MB with zero public tables, zero estimated
+  rows and no `alembic_version` table;
+- Redis has zero keys and an empty AOF;
+- the profile therefore does not serve the canonical local AIJAA runtime.
 
-The AIJAA database had zero user tables and Redis had zero keys during the
-earlier source-of-truth audit. The user later reported using this profile as
-the local AIJAA server while working on `aijaa-reconcile`; therefore its
-current logical data state must be rechecked before any stop or migration.
-The Supabase-named volume remains unclassified. This profile is protected from
-deletion or repurposing until the remaining volumes and current runtime role
-are confirmed.
+This profile is classified as an empty isolated duplicate and a retirement
+candidate. It remains protected from deletion or repurposing. The next
+permitted lifecycle step is a separately approved stop-only observation that
+preserves every container, image and volume. The Supabase-named volume remains
+unclassified.
+
 
 ## 6. AIJAA dependency finding
 
@@ -199,12 +210,11 @@ Verified active worktree:
 - Path: `~/Code/AIJAA/aijaa-reconcile`
 - Repository: `edenfc10/Job-search-platform`
 - Branch during the latest check: `feat/wp1-submit-safety`
-- Latest reported HEAD after CI setup: `6aca9ec`
-- Commit message: `ci: install Node.js on local runner`
-- Earlier verified commit:
-  `3127e713f6873fcf3b9ff33861a5d272880cfc4b`
-- Working tree was reported clean and synchronized with origin after the CI
-  change.
+- Verified HEAD: `23efeb8c95c311f90b82b9782541c57e23f19ddd`
+- Working tree: clean.
+- Local branch and remote branch HEAD: exact match.
+- Pull request #5 remained open as a draft and its push and pull-request CI
+  runs passed at this commit.
 
 Historical worktree:
 
@@ -217,14 +227,20 @@ created from that historical Compose project still remained in `default`.
 
 ### Active AIJAA data
 
-The protected `default` profile contained:
+The protected `default` profile is the canonical local AIJAA runtime.
+The 2026-11-06 check verified:
 
-- PostgreSQL 16.15;
-- database size 19,446,807 bytes during source discovery;
-- 29 user tables;
+- macOS `127.0.0.1:55432` forwards to its PostgreSQL container;
+- macOS `127.0.0.1:6379` forwards to its Redis container;
+- PostgreSQL 16.15 with cluster ID `7679043721093750818`;
+- database size approximately 19 MB;
+- 29 public tables;
 - approximately 23 live rows;
 - Alembic revision `6c1a9d4e2f70`;
 - Redis DB size 0 with AOF enabled.
+
+The similarly named containers in `rebbestay-ci` are a separate empty
+cluster and do not own the macOS localhost forwarding.
 
 The active source tree contained 16 migrations and one head:
 
@@ -327,15 +343,16 @@ Historical successful run ID: `41326112082`.
 
 ### AIJAA runner
 
-A second project-specific runner was reported and its completed Docker state
-was observed:
+The AIJAA project-specific runner and its Docker state were verified:
 
 - Runner: `eden-aijaa-ci`;
 - Labels: `self-hosted`, `Linux`, `ARM64`, `aijaa-ci`;
 - Docker runtime: Colima profile `aijaa-ci`;
 - Capacity: 4 CPUs, 8 GiB memory and 60 GiB logical disk;
 - no macOS home-directory mount;
-- no Ubicloud usage and no payment method added.
+- no Ubicloud usage and no payment method added;
+- `Runner.Listener` active inside the `aijaa-ci` VM;
+- five unlinked anonymous volumes, approximately 251.5 MB total.
 
 Workflow changes were limited to AIJAA CI configuration:
 
@@ -433,7 +450,7 @@ a live backup, restore, retention cleanup or service mutation.
 | High | GitHub runner executes under the normal macOS user | Dedicated Docker profile and fork guard | Harden host permissions, network and account boundary |
 | High | Supabase development ports listen on all interfaces | macOS firewall | Rebind locally after RebbeStay impact review |
 | Medium | AIJAA source head is ahead of protected DB | Backup and tested restore | Apply migration only to an approved isolated copy first |
-| Medium | AIJAA CI left two anonymous volumes after green jobs | Volumes are small and unlinked | Confirm job ownership, then add explicit safe cleanup policy |
+| Medium | AIJAA CI left five anonymous volumes (251.5 MB) after green jobs | Volumes are unlinked and the CI profile is isolated | Confirm job ownership, then add explicit safe cleanup policy |
 | Medium | Ollama storage is large | Deduplicated blob storage | Add model ownership and retention policy; never remove by size alone |
 | Medium | Long uptime accumulated swap | Guardian metrics | Track memory pressure and introduce lifecycle modes |
 | Medium | Background scripts are not packaged as one service | launchd and audit logs | Package, test and version configuration |
@@ -464,12 +481,13 @@ capacity only when needed:
    - starts on demand and stops after verified job cleanup;
    - anonymous job volumes require an explicit cleanup rule.
 
-4. **AIJAA local development / isolated staging — current
-   `rebbestay-ci` role under review**
-   - currently hosts AIJAA PostgreSQL and Redis;
-   - may become the single isolated AIJAA development/staging runtime;
-   - requires a clearer profile name in a later migration;
-   - no rename, stop or data move before backup and current-state validation.
+4. **Empty duplicate retirement candidate — `rebbestay-ci`**
+   - contains an empty AIJAA PostgreSQL cluster and empty Redis instance;
+   - does not own the macOS localhost forwards;
+   - preserves one unclassified Supabase-named volume;
+   - may be stopped only under a reviewed stop-only plan;
+   - no deletion, rename or volume removal before encrypted off-device recovery
+     is proven and the observation window completes.
 
 Separate project CI profiles are justified by workload isolation. Resource
 efficiency comes from lifecycle automation rather than combining unrelated CI
@@ -558,12 +576,15 @@ checksum, retention rule and tested restore evidence.
 
 ### Phase 2 — Assign profile ownership
 
-- Classify the anonymous `aijaa-ci` volume.
-- Classify the three `rebbestay-ci` volumes.
-- Verify the runner's actual Docker socket.
-- Create a profile ownership table with allowed workloads.
-- Stop empty or idle profiles only after review.
-- Observe the Mac for regressions before considering deletion.
+- Canonical AIJAA localhost ownership was verified in `default`.
+- `rebbestay-ci` was classified as an empty isolated duplicate candidate.
+- Five anonymous `aijaa-ci` volumes remain to be classified.
+- The Supabase-named `rebbestay-ci` volume remains to be classified.
+- Verify the effective Docker socket for each runner at startup.
+- Prepare a persistent stop-only plan for `rebbestay-ci`.
+- Stop it only after explicit approval while preserving all resources.
+- Verify AIJAA localhost PostgreSQL and Redis after the stop.
+- Observe the Mac for regressions before considering retirement or deletion.
 
 Exit criteria: every running profile has one documented role; no profile is
 running without an active workload or explicit reason.
@@ -613,15 +634,17 @@ reachable from the LAN.
 
 ## 14. Immediate prioritized tasks
 
-1. Merge this documentation PR.
-2. Choose and configure an encrypted off-device backup target.
-3. Copy and verify the existing AIJAA dump off-device.
-4. Confirm the current logical data state of `rebbestay-ci`.
-5. Classify the Supabase-named and anonymous CI volumes.
-6. Add on-demand lifecycle control for both project CI profiles.
-7. Harden both GitHub runners.
-8. Remediate public Supabase bindings after a RebbeStay impact review.
-9. Implement lifecycle modes.
+1. Review and merge this documentation PR only after the evidence diff passes
+   review.
+2. Run the read-only iCloud preflight.
+3. Choose secure encryption-password and recovery-key handling.
+4. Copy and verify the existing AIJAA dump off-device under an approved plan.
+5. Prepare and review the stop-only `rebbestay-ci` observation plan.
+6. Classify the Supabase-named and anonymous CI volumes.
+7. Add on-demand lifecycle control for both project CI profiles.
+8. Harden both GitHub runners.
+9. Remediate public Supabase bindings after a RebbeStay impact review.
+10. Implement lifecycle modes.
 
 ## 15. PR operating workflow
 
